@@ -32,7 +32,7 @@ _This is a nice boiler-plate Terraform plan for a high-performing cluster that i
 - kube-vip is operating via ARP mode, so services published via LoadBalancer _will have traffic directed to a single node_.
 
 ---
-- Unlike the baked-in NGiNX Ingress Controller, HAProxy's ingress is **not** FIPS 140-2 compliant.
+- Unlike RKE2's "baked-in" NGiNX Ingress Controller, HAProxy's ingress is **not** FIPS 140-2 compliant.
 
 ## To Run
     > terraform apply
