@@ -18,26 +18,16 @@ spec:
         env:
         - name: address
           value: "${svc_lb_vip}"
-        - name: bgp_as
-          value: "${bgp_local_as}"
-        - name: bgp_enable
-          value: "true"
-        - name: bgp_peeraddress
-          value: "${bgp_peer_router}"
-        - name: bgp_peeras
-          value: "${bgp_remote_as}"
-        - name: bgp_routerid # Grab Pod IP from Downward API
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
         - name: cp_enable
           value: "false"
         - name: svc_enable
           value: "true"
         - name: vip_arp
-          value: "false"
+          value: "true"
         - name: vip_interface
           value: "${interface_name}"
+        - name: "vip_leaderelection"
+          value: "true"
         image: ghcr.io/kube-vip/kube-vip:${kube_vip_version}
         imagePullPolicy: Always
         name: kube-vip

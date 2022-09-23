@@ -3,9 +3,6 @@ variable "kubevip" {
   type = object({
     interface_name = string
     lb_vip         = string
-    local_as       = string
-    peer_router    = string
-    remote_as      = string
     version        = string
   })
 }

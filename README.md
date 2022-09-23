@@ -1,11 +1,9 @@
-# RKE2 Cluster with Cilium CNI & kube-vip BGP Service load balancing
+# RKE2 Cluster with kube-proxy -less Cilium CNI & BBR Pod Congestion Control
 
 ![Rancher](https://img.shields.io/badge/rancher-%230075A8.svg?style=for-the-badge&logo=rancher&logoColor=white) ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white) 	![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
 
 ## Reason for Being
-This Terraform plan is for creating a kube-proxy -less multi-node RKE2 cluster using [Cilium CNI](https://docs.cilium.io/en/v1.12/) and uses also [kube-vip](https://kube-vip.io/docs/) BGP for workload Service load balancing.  Additionally, the Cilium chart enables [BBR Pod Congestion Control](https://docs.cilium.io/en/v1.12/operations/performance/tuning/#bbr-congestion-control-for-pods) for greatly increased network performance.  The kube-vip Service load balancer is configured for exposing just the published Ingress Controller service (the baked-in RKE2 NGiNX Ingress is disabled in favor of HAProxy Ingress), but if you need/want more IPs for additional services, feel free to increase the pool size.  
-
-Also installed is **Rancher's Prometheus Operator Chart (`cluster_monitoring.tf`)** along with an HAProxy Ingress Grafana Dashboard to gain visibility into your Ingress traffic.
+This Terraform plan is for creating a kube-proxy -less multi-node RKE2 cluster using [Cilium CNI](https://docs.cilium.io/en/v1.12/).  The Cilium chart enables [BBR Pod Congestion Control](https://docs.cilium.io/en/v1.12/operations/performance/tuning/#bbr-congestion-control-for-pods) for greatly increased network performance as well. Also installed is **Rancher's Prometheus Operator Chart (`cluster_monitoring.tf`)** along with an HAProxy Ingress Grafana Dashboard to gain visibility into your Ingress traffic (this plan disables the built-in RKE2 NGiNX Ingress in favor of HAProxy because...reasons  `¯\_(ツ)_/¯` ). kube-vip makes a token appearance here to advertise the HAProxy Ingress Controller via ARP.
 
 _This is a nice boiler-plate Terraform plan for a high-performing cluster that includes a very capable monitoring stack._
 
@@ -23,28 +21,18 @@ _This is a nice boiler-plate Terraform plan for a high-performing cluster that i
     | .rancher-api-url | URL for Rancher Management Server
     | .rancher-bearer-token | API bearer token generated via Rancher UI
     | .ssh-public-key | SSH public key for additional OS user
-    
-- Since this plan leverages BGP for K8s Service load balancing, a router capable of BGP is required.  For lab/dev/test use, a small single-CPU Linux VM running [BIRD v2 daemon](https://bird.network.cz/?get_doc&f=bird.html&v=20) (`sudo apt install bird2`) with the following config would suffice:
-
-```
-protocol bgp kubevip {
-        description "kube-vip for Service Load Balancer";
-        local <router eth interface IP address> as 64513;
-        neighbor range <network prefix of Worker pool subnet> as <AS value configured in kube-vip manifest>;
-        graceful restart;
-        ipv4 {
-                import filter {accept;};
-                export filter {reject;};
-        };
-        dynamic name "kubeVIP";
-}
-```
 
 ## Caveats
 - [Cilium's Hubble UI](https://docs.cilium.io/en/v1.12/gettingstarted/hubble/) is disabled as it can be a [drag on performance](https://docs.cilium.io/en/v1.12/operations/performance/tuning/#hubble).  However, if you enjoy looking at groupings of rectangles connected with lines and _do_ want to enable Hubble, reference the RKE2 Cilium Helm chart [HERE](https://github.com/rancher/rke2-charts/tree/main/charts/rke2-cilium/rke2-cilium).
 
 ---
 - If you don't want to run the **Rancher Prometheus Operator**, it can be uninstalled at any time simply by removing `cluster_monitoring.tf` from your working directory and re-applying the plan.  It is here as a demonstration/value-add, not a requirement of any kind.
+
+---
+- kube-vip is operating via ARP mode, so services published via LoadBalancer _will have traffic directed to a single node_.
+
+---
+- Unlike the baked-in NGiNX Ingress Controller, HAProxy's ingress is **not** FIPS 140-2 compliant.
 
 ## To Run
     > terraform apply
@@ -53,7 +41,7 @@ protocol bgp kubevip {
 
 | SOFTWARE | VERSION | DOCS |
 | ------ | ------ | ------ |
-| kube-vip | 0.5.0 | https://kube-vip.io/docs/
+| kube-vip | 0.5.0 | https://kube-vip.io/docs
 | Rancher Prometheus Operator | 100.1.3+up19.0.3 | https://docs.ranchermanager.rancher.io/pages-for-subheaders/monitoring-and-alerting
 | Rancher Server | 2.6.8 | https://rancher.com/docs/rancher/v2.6/en/overview
 | Rancher Terraform Provider| 1.24.1 | https://registry.terraform.io/providers/rancher/rancher2/latest/docs

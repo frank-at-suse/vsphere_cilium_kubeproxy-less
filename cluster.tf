@@ -35,9 +35,6 @@ resource "rancher2_cluster_v2" "rke2" {
   rke_config {
     additional_manifest = templatefile("${path.cwd}/files/additional_manifests.tftmpl",
       {
-        bgp_local_as     = var.kubevip.local_as
-        bgp_peer_router  = var.kubevip.peer_router
-        bgp_remote_as    = var.kubevip.remote_as
         interface_name   = var.kubevip.interface_name
         kube_vip_version = var.kubevip.version
         svc_lb_vip       = var.kubevip.lb_vip
