@@ -64,7 +64,6 @@ resource "rancher2_cluster_v2" "rke2" {
       disable: [ "rke2-ingress-nginx" ]
       disable-kube-proxy: "true"
       etcd-arg: [ "experimental-initial-corrupt-check=true" ] # Can be removed once etcd v3.6 enables corruption check by default (see: https://github.com/etcd-io/etcd/issues/13766)
-      kube-controller-manager-arg: [ "allocate-node-cidrs" ]
       kubelet-arg: [ "cgroup-driver=systemd" ]
       write-kubeconfig-mode: "0644"
     EOF
