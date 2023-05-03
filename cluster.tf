@@ -36,7 +36,8 @@ resource "rancher2_cluster_v2" "rke2" {
     additional_manifest = templatefile("${path.cwd}/files/additional_manifests.tftmpl",
       {
         interface_name   = var.kubevip.interface_name
-        kube_vip_version = var.kubevip.version
+        kube_vip_rbac    = data.http.kube_vip_rbac.response_body
+        kube_vip_version = jsondecode(data.http.kube_vip_version.response_body)["tag_name"]
         svc_lb_vip       = var.kubevip.lb_vip
     })
 
@@ -50,17 +51,10 @@ resource "rancher2_cluster_v2" "rke2" {
           masquerade: true
         cluster:
           name: ${random_pet.cluster_name.id}
-        externalIPs:
-          enabled: true
-        hostPort:
-          enabled: true
+        installNoConntrackIptablesRules: true
         k8sServiceHost: 127.0.0.1
         k8sServicePort: 6443
         kubeProxyReplacement: strict
-        loadBalancer:
-          algorithm: maglev
-        nodePort:
-          enabled: true
         operator:
           replicas: 1
     EOF

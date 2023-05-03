@@ -3,7 +3,6 @@ variable "kubevip" {
   type = object({
     interface_name = string
     lb_vip         = string
-    version        = string
   })
 }
 
@@ -33,6 +32,5 @@ variable "vsphere_env" {
     datastore        = string
     library_name     = string
     server           = string
-    user             = string
   })
 }

@@ -1,33 +1,13 @@
 #cloud-config
+package_update: true
 package_upgrade: true
 
 write_files:
   
-- content: |
-    [plugins.opt]
-      path = "/var/lib/rancher/rke2/agent/containerd"
-
-    [plugins.cri]
-      stream_server_address = "127.0.0.1"
-      stream_server_port = "10010"
-      enable_selinux = false
-      sandbox_image = "index.docker.io/rancher/pause:3.6"
-
-    [plugins.cri.containerd]
-      snapshotter = "overlayfs"
-      disable_snapshot_annotations = true
-
-    [plugins.cri.containerd.runtimes.runc]
-      runtime_type = "io.containerd.runc.v2"
-
-    [plugins.cri.containerd.runtimes.runc.options]
-        SystemdCgroup = true
-  path: "/var/lib/rancher/rke2/agent/etc/containerd/config.toml.tmpl" # Ensure containerd runs in systemd cgroup
-
-runcmd:
-  - sed -i '/#PermitRootLogin prohibit-password/c\PermitRootLogin no' /etc/ssh/sshd_config
-  - sed -i '/#PubkeyAuthentication yes/c\PubkeyAuthentication yes' /etc/ssh/sshd_config
-  - systemctl restart sshd
+- path: /etc/sysctl.d/99-bbrSettings.conf
+  content: |
+    net.core.default_qdisc=fq
+    net.ipv4.tcp_congestion_control=bbr
 
 # Create Users Here
 users:
