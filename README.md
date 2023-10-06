@@ -11,7 +11,7 @@ _This is a nice boiler-plate Terraform plan for a high-performing cluster that i
 ## Environment Prerequisites
 
 - Functional Rancher Management Server with vSphere Cloud Credential
-- vCenter >= 7.x and credentials with appropriate permissions (see <https://docs.ranchermanager.rancher.io/how-to-guides/new-user-guides/kubernetes-clusters-in-rancher-setup/launch-kubernetes-with-rancher/use-new-nodes-in-an-infra-provider/vsphere/create-credentials>)
+- vCenter >= 7.x and credentials with appropriate permissions (see <https://github.com/rancher/barn/blob/main/Walkthroughs/vSphere/Permissions/README.md>)
 - Virtual Machine Hardware Compatibility at Version >= 15
 - Linux Kernel >= 5.18 (required for enabling [BBR Pod Congestion Control](https://docs.cilium.io/en/latest/operations/performance/tuning/#bbr-congestion-control-for-pods))
 - Create the following in the files/ directory:
@@ -42,10 +42,10 @@ terraform apply
 
 | SOFTWARE | VERSION | DOCS |
 |:---------|:--------|:-----|
-| kube-vip                    | 0.6.0            | <https://kube-vip.io/docs> |
-| Rancher Prometheus Operator | 102.0.0+up40.1.2 | <https://docs.ranchermanager.rancher.io/pages-for-subheaders/monitoring-and-alerting> |
-| Rancher Server              | 2.7.4            | <https://rancher.com/docs/rancher/v2.6/en/overview> |
-| Rancher Terraform Provider  | 3.0.0            | <https://registry.terraform.io/providers/rancher/rancher2/latest/docs> |
-| RKE2                        | 1.25.9+rke2r1    | <https://docs.rke2.io> |
+| kube-vip                    | 0.6.2            | <https://kube-vip.io/docs> |
+| Rancher Prometheus Operator | 102.0.2+up40.1.2 | <https://docs.ranchermanager.rancher.io/pages-for-subheaders/monitoring-and-alerting> |
+| Rancher Server              | 2.7.6            | <https://rancher.com/docs/rancher/v2.6/en/overview> |
+| Rancher Terraform Provider  | 3.1.1            | <https://registry.terraform.io/providers/rancher/rancher2/latest/docs> |
+| RKE2                        | 1.26.8+rke2r1    | <https://docs.rke2.io> |
 | Terraform                   | 1.4.6            | <https://www.terraform.io/docs> |
-| vSphere                     | 7.0.3.01300      | <https://docs.vmware.com/en/VMware-vSphere/index.html> |
+| vSphere                     | 8.0.1.00300      | <https://docs.vmware.com/en/VMware-vSphere/index.html> |

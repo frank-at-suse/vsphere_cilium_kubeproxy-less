@@ -12,7 +12,7 @@ rancher_env = {
   cloud_credential    = "vsphere-credential-name"
   cluster_annotations = { "foo" = "bar" }
   cluster_labels      = { "something" = "amazing" }
-  rke2_version        = "v1.25.9+rke2r1"
+  rke2_version        = "v1.26.8+rke2r1"
 }
 
 vsphere_env = {

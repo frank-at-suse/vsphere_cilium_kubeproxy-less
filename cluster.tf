@@ -54,8 +54,9 @@ resource "rancher2_cluster_v2" "rke2" {
         installNoConntrackIptablesRules: true
         k8sServiceHost: 127.0.0.1
         k8sServicePort: 6443
-        kubeProxyReplacement: strict
+        kubeProxyReplacement: true
         operator:
+          enabled: true
           replicas: 1
     EOF
 
